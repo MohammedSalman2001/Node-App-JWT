@@ -28,7 +28,21 @@ const findCustomer=(req,res)=>{
 }
 
 const updateCustomer=(req,res)=>{
-
+    Customer.updateOne({nic:req.header.nic},{
+        $set:{
+            name:req.body.name,
+            address:req.body.address,
+            salary:req.body.salary
+        }
+    }).then(result=>{
+        if(result){
+            res.status(201).json({status:true,message:'customer update'})
+        }else {
+            res.status(201).json({status:false,message:'Try again'})
+        }
+    }).catch(error=>{
+        res.status(500).json(error)
+    })
 }
 
 const deleteCustomer=(req,res)=>{
