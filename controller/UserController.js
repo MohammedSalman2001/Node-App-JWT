@@ -2,6 +2,8 @@
 const UserSchema=require('../model/UserSchema')
   const bcrypt=  require('bcrypt');
 
+  const jsonWebToken=require('jsonwebtoken')
+
 
 
 
@@ -39,19 +41,22 @@ const signup= async (req,res)=>{
 }
 
 const login= async (req,res)=>{
-    UserSchema.findOne({username:req.body.username}).then(result=>{
+    UserSchema.findOne({username:req.body.username}).then(selectedUser=>{
 
-        if(result===null){
+        if(selectedUser===null){
             return res.status(404).json({message:'user name not found!'})
         }else{
 
-            bcrypt.compare(req.body.password, result.password, function(err, result) {
+            bcrypt.compare(req.body.password, selectedUser.password, function(err, result) {
                 if(err){
                     return res.status(500).j(err)
-
                 }
                  if(result){
-                    return res.status(200).json({token:'token data'})
+
+                      const token=  jsonWebToken.sign({'username':selectedUser.username},
+                      process.env.SECRET_KEY);
+
+                    return res.status(200).json({token:token})
 
                 }else{
                     return res.status(401).json({message:'password incrote'})
