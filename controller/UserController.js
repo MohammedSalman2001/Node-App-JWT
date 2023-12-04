@@ -53,10 +53,13 @@ const login= async (req,res)=>{
                 }
                  if(result){
 
+                     const expiresIn=3600;
                       const token=  jsonWebToken.sign({'username':selectedUser.username},
-                      process.env.SECRET_KEY);
+                      process.env.SECRET_KEY,{expiresIn});
 
-                    return res.status(200).json({token:token})
+                    res.setHeader("Authorization",`Bearer ${token}`)
+
+                    return res.status(200).json({message:'Check tha heder'})
 
                 }else{
                     return res.status(401).json({message:'password incrote'})
