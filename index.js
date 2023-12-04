@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 //=================================
 
 const customerRoute=require('./route/CustomerRoute')
+const userRoute=require('./route/UserRoute')
 //=================================
 
 const port = process.env.SERVER_PORT || 3000;
@@ -27,6 +28,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/customer_mongo').then(() => {
 
 
 app.use('/api/v1/customers',customerRoute) //http://localhost:3000/api/v1/customers/save-customer
+app.use('/api/v1/users',userRoute);
 
 
 
