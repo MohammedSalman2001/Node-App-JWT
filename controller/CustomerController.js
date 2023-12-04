@@ -2,6 +2,7 @@
 const Customer=require('../model/CustomerSchema')
 
 const saveCustomer=(req,res)=>{
+    console.log(req.body)
     const tempCustomer=new Customer({
         nic:req.body.nic,
         name:req.body.name,
@@ -17,7 +18,8 @@ const saveCustomer=(req,res)=>{
 }
 
 const findCustomer=(req,res)=>{
-    Customer.findOne({nic:req.header.nic}).then(result=>{
+    console.log({nic:req.params.nic})
+    Customer.findOne({nic:req.headers.nic}).then(result=>{
         if(result===null){
             res.status(404).json({status:false,message:'customer not found!'})
         }else {
@@ -28,14 +30,16 @@ const findCustomer=(req,res)=>{
 }
 
 const updateCustomer=(req,res)=>{
-    Customer.updateOne({nic:req.header.nic},{
+    console.log(req.headers.nic)
+    Customer.updateOne({nic:req.headers.nic},{
         $set:{
             name:req.body.name,
             address:req.body.address,
             salary:req.body.salary
         }
     }).then(result=>{
-        if(result.nModified>0){
+        console.log(result)
+        if(result.modifiedCount>0){
             res.status(201).json({status:true,message:'customer update'})
         }else {
             res.status(201).json({status:false,message:'Try again'})
@@ -46,7 +50,7 @@ const updateCustomer=(req,res)=>{
 }
 
 const deleteCustomer=(req,res)=>{
-    Customer.deleteOne({nic:req.header.nic}).then(result=>{
+    Customer.deleteOne({nic:req.headers.nic}).then(result=>{
         if(result>deleteCount>0){
             res.status(204).json({status:true,message:'customer delete'})
         }else {
