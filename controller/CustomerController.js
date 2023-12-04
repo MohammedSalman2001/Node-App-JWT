@@ -35,7 +35,7 @@ const updateCustomer=(req,res)=>{
             salary:req.body.salary
         }
     }).then(result=>{
-        if(result){
+        if(result.nModified>0){
             res.status(201).json({status:true,message:'customer update'})
         }else {
             res.status(201).json({status:false,message:'Try again'})
@@ -46,9 +46,30 @@ const updateCustomer=(req,res)=>{
 }
 
 const deleteCustomer=(req,res)=>{
+    Customer.deleteOne({nic:req.header.nic}).then(result=>{
+        if(result>deleteCount>0){
+            res.status(204).json({status:true,message:'customer delete'})
+        }else {
+            res.status(400).json({status:false,message:'Try Again'})
+        }
+    }).catch(error=>{
+        res.status(500).json(error)
+    })
 
 }
 
 const findAllCustomer=(req,res)=>{
+        Customer.find().then(result=>{
+                res.status(200).json({status:true,data:result})
+        }).catch(error=>{
+            res.status(500).json(error)
+        })
+}
 
+module.exports={
+    saveCustomer,
+    findCustomer,
+    updateCustomer
+    ,deleteCustomer,
+    findAllCustomer
 }
